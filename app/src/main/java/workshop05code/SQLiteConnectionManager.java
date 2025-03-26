@@ -1,5 +1,6 @@
 package workshop05code;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -8,11 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-//Import for logging exercise
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -130,7 +126,11 @@ public class SQLiteConnectionManager {
         String sql = "INSERT INTO validWords(id,word) VALUES('" + id + "','" + word + "')";
 
         try (Connection conn = DriverManager.getConnection(databaseURL);
+
+
+
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                  //  pstmt.setString(id, sql);  // added in
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
