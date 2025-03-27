@@ -129,8 +129,8 @@ public class SQLiteConnectionManager {
 
 
 
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                  //  pstmt.setString(id, sql);  // added in
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {         // fix this
+                  //  pstmt.setString(id, sql);  // added in  
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -148,7 +148,7 @@ public class SQLiteConnectionManager {
         String sql = "SELECT count(id) as total FROM validWords WHERE word like'" + guess + "';";
 
         try (Connection conn = DriverManager.getConnection(databaseURL);
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {     // fix thos
 
             ResultSet resultRows = stmt.executeQuery();
             if (resultRows.next()) {
