@@ -13,6 +13,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class SQLiteConnectionManager {
+
     //Start code logging exercise
     static {
         // must set before the Logger
@@ -26,7 +27,7 @@ public class SQLiteConnectionManager {
 
     private static final Logger logger = Logger.getLogger(SQLiteConnectionManager.class.getName());
     //End code logging exercise
-    
+
     private String databaseURL = "";
 
     private static final String WORDLE_DROP_TABLE_STRING = "DROP TABLE IF EXISTS wordlist;";
@@ -40,6 +41,7 @@ public class SQLiteConnectionManager {
             + " id integer PRIMARY KEY,\n"
             + " word text NOT NULL\n"
             + ");";
+
     /**
      * Set the database file name in the sqlite project to use
      *
@@ -72,8 +74,8 @@ public class SQLiteConnectionManager {
     /**
      * Check that the file has been cr3eated
      *
-     * @return true if the file exists in the correct location, false otherwise. If
-     *         no url defined, also false.
+     * @return true if the file exists in the correct location, false otherwise.
+     * If no url defined, also false.
      */
     public boolean checkIfConnectionDefined() {
         if (databaseURL.equals("")) {
@@ -100,8 +102,7 @@ public class SQLiteConnectionManager {
         if (databaseURL.equals("")) {
             return false;
         } else {
-            try (Connection conn = DriverManager.getConnection(databaseURL);
-                    Statement stmt = conn.createStatement()) {
+            try (Connection conn = DriverManager.getConnection(databaseURL); Statement stmt = conn.createStatement()) {
                 stmt.execute(WORDLE_DROP_TABLE_STRING);
                 stmt.execute(WORDLE_CREATE_STRING);
                 stmt.execute(VALID_WORDS_DROP_TABLE_STRING);
@@ -117,21 +118,21 @@ public class SQLiteConnectionManager {
 
     /**
      * Take an id and a word and store the pair in the valid words
-     * 
-     * @param id   the unique id for the word
+     *
+     * @param id the unique id for the word
      * @param word the word to store
      */
     public void addValidWord(int id, String word) {
 
         String sql = "INSERT INTO validWords(id,word) VALUES('" + id + "','" + word + "')";
 
-        try (Connection conn = DriverManager.getConnection(databaseURL);
+        try (Connection conn = DriverManager.getConnection(databaseURL); PreparedStatement pstmt = conn.prepareStatement(sql)) {         // fix this
 
+            pstmt.setInt(1, id);      //added this
+            pstmt.setString(2, word);  //added this
 
-
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {         // fix this
-                  //  pstmt.setString(id, sql);  // added in  
             pstmt.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -140,15 +141,14 @@ public class SQLiteConnectionManager {
 
     /**
      * Possible weakness here?
-     * 
+     *
      * @param guess the string to check if it is a valid word.
      * @return true if guess exists in the database, false otherwise
      */
     public boolean isValidWord(String guess) {
         String sql = "SELECT count(id) as total FROM validWords WHERE word like'" + guess + "';";
 
-        try (Connection conn = DriverManager.getConnection(databaseURL);
-                PreparedStatement stmt = conn.prepareStatement(sql)) {     // fix thos
+        try (Connection conn = DriverManager.getConnection(databaseURL); PreparedStatement stmt = conn.prepareStatement(sql)) {     // fix thos
 
             ResultSet resultRows = stmt.executeQuery();
             if (resultRows.next()) {
