@@ -56,6 +56,7 @@ public class App {
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
                 wordleDatabaseConnection.addValidWord(i, line);
+                logger.info("Valid word loaded: " + line); // added
                 i++;
             }
 
@@ -77,18 +78,24 @@ public class App {
 
                     if (wordleDatabaseConnection.isValidWord(guess)) {
                         System.out.println("Success! It is in the the list.\n");
+                        logger.info("Valid guess: " + guess); // added
                     } else {
                         System.out.println("Sorry. This word is NOT in the the list.\n");
+                        logger.warning("Invalid guess: " + guess); // added
+
                     }
                 } else {
                     System.out.println("Sorry. This word does not fit the parameters");
+                    logger.warning("Invalid guess (wrong format): " + guess); // added
+
                 }
 
                 System.out.print("Enter a 4 letter word for a guess or q to quit: ");
                 guess = scanner.nextLine();
             }
         } catch (NoSuchElementException | IllegalStateException e) {
-            e.printStackTrace();
+               e.printStackTrace();
+
         }
 
     }
